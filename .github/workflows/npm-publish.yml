@@ -1,0 +1,80 @@
+# This workflow will run tests using node and then publish a package to GitHub Packages when a release is created
+# For more information see: https://docs.github.com/en/actions/publishing-packages/publishing-nodejs-packages
+
+name: Node.js Package
+
+on:
+  release:
+    types: [created]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - run: npm ci
+      - run: npm test
+
+  publish-npm:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          registry-url: https://registry.npmjs.org/
+      - run: npm ci
+      - run: npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{secrets.npm_token}}
+          
+     name: actions.dbd.be.dockerbuild
+  # You may pin to the exact commit or the version.
+  # uses: main-quest/actions.dbd.be.dockerbuild@8201e83edbb0d4960e83c587fd129ab39913cb99
+  uses: main-quest/actions.dbd.be.dockerbuild@v0.0.1
+  with:
+    # ec. stage22
+    dbd_stage: 
+    # 
+    gar_key: 
+    # ex. us-docker.pkg.dev
+    registry: # optional, default is us-docker.pkg.dev
+    # 
+    gcp_project: # optional, default is dragon-blood-dungeon
+    # repo's name by default
+    image_name: # optional
+          
+            - name: Publish NuGet@linch90
+  # You may pin to the exact commit or the version.
+  # uses: linch90/publish-nuget@8c0b10adcf4fe617d955c36b0e84d23639a8108a
+  uses: linch90/publish-nuget@v1.0.2
+  with:
+    # Filepath of the project to be packaged, relative to root of repository
+    PROJECT_FILE_PATH: 
+    # NuGet package id, used for version detection & defaults to project name
+    PACKAGE_NAME: # optional
+    # Filepath with version info, relative to root of repository & defaults to PROJECT_FILE_PATH
+    VERSION_FILE_PATH: # optional
+    # Regex pattern to extract version info in a capturing group
+    VERSION_REGEX: # optional, default is ^\s*<Version>(.*)<\/Version>\s*$
+    # Useful with external providers like Nerdbank.GitVersioning, ignores VERSION_FILE_PATH & VERSION_REGEX
+    VERSION_STATIC: # optional
+    # Flag to toggle git tagging, enabled by default
+    TAG_COMMIT: # optional, default is true
+    # Format of the git tag, [*] gets replaced with actual version
+    TAG_FORMAT: # optional, default is v*
+    # API key to authenticate with NuGet server
+    NUGET_KEY: # optional
+    # NuGet server uri hosting the packages, defaults to https://api.nuget.org
+    NUGET_SOURCE: # optional, default is https://api.nuget.org
+    # The resource url segment used for fetching package content, defaults to v3-flatcontainer
+    V3_FLAT_CONTAINER: # optional, default is v3-flatcontainer
+    # Flag to toggle pushing symbols along with nuget package to the server, disabled by default
+    INCLUDE_SYMBOLS: # optional
+    # Flag to toggle not building the project and letting pack command handle restoring & building, disabled by default
+    NO_BUILD: # optional
+          
